@@ -1,16 +1,12 @@
-### Hi there 👋
+# Some projects
+_Click to go to the project repo_
+<p align="center">
+ <a href="https://github.com/Brenocq/RobotSimulator"><img src="./img/RobotSimulator.png" height="200"></a>
+ <a href="https://github.com/Brenocq/SoccerOpenRCJ"><img src="./img/SoccerOpenRCJ.jpg" height="200"></a>
+ <a href="https://github.com/Brenocq/Parallelepiped-3DPrinter"><img src="./img/3DPrinter.png" height="200"></a>
+</p>
+<p align="center">
+ <a href="https://github.com/Brenocq/Tetris"><img src="./img/Tetris.png" height="200"></a>
+</p>
 
-<!--
-**Brenocq/Brenocq** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
-
-Here are some ideas to get you started:
-
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+## More at: [brenocq.com](https://brenocq.com/)
