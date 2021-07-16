@@ -1,14 +1,8 @@
-### Some projects
-_Click to go to the project repo_
-<p align="center">
- <a href="https://github.com/Brenocq/RobotSimulator"><img src="./img/RobotSimulator.png" height="200"></a>
- <a href="https://github.com/Brenocq/SoccerOpenRCJ"><img src="./img/SoccerOpenRCJ.jpg" height="200"></a>
- <a href="https://github.com/Brenocq/Parallelepiped-3DPrinter"><img src="./img/3DPrinter.jpg" height="200"></a>
-</p>
-<p align="center">
- <a href="https://github.com/Brenocq/ARTagDetection"><img src="./img/ARTagDetection.png" height="200"></a>
- <a href="https://github.com/Brenocq/Tetris"><img src="./img/Tetris.png" height="200"></a>
- <a href="https://github.com/Brenocq/Honeybee-Simulation"><img src="./img/Honeybee.png" height="200"></a>
-</p>
+### Hi there! I'm Breno 👋 
+<a href="https://github.com/Brenocq/Atta"><img align="right" alt="GIF" src="https://github.com/Brenocq/Atta/blob/master/img/2020-12-04.gif" height=200px/></a>
 
-#### More at: [brenocq.com](https://brenocq.com/)
+🎓 CS student who likes to develop projects and delve into new topics.
+
+🔬 Currently researching SLAM for indoor multi-robot systems.
+
+💻 Check out my [personal website](https://brenocq.com/)! 
