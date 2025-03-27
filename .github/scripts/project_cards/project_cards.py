@@ -22,6 +22,87 @@ PR_CLOSED_PATH = "M5.45 5.154A4.25 4.25 0 0 0 9.25 7.5h1.378a2.251 2.251 0 1 1 0
 DISCUSSION_OPEN_PATH = "M1.75 1h8.5c.966 0 1.75.784 1.75 1.75v5.5A1.75 1.75 0 0 1 10.25 10H7.061l-2.574 2.573A1.458 1.458 0 0 1 2 11.543V10h-.25A1.75 1.75 0 0 1 0 8.25v-5.5C0 1.784.784 1 1.75 1ZM1.5 2.75v5.5c0 .138.112.25.25.25h1a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h3.5a.25.25 0 0 0 .25-.25v-5.5a.25.25 0 0 0-.25-.25h-8.5a.25.25 0 0 0-.25.25Zm13 2a.25.25 0 0 0-.25-.25h-.5a.75.75 0 0 1 0-1.5h.5c.966 0 1.75.784 1.75 1.75v5.5A1.75 1.75 0 0 1 14.25 12H14v1.543a1.458 1.458 0 0 1-2.487 1.03L9.22 12.28a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215l2.22 2.22v-2.19a.75.75 0 0 1 .75-.75h1a.25.25 0 0 0 .25-.25Z"
 DISCUSSION_CLOSED_PATH = "M0 2.75C0 1.783.784 1 1.75 1h8.5c.967 0 1.75.783 1.75 1.75v5.5A1.75 1.75 0 0 1 10.25 10H7.061l-2.574 2.573A1.457 1.457 0 0 1 2 11.543V10h-.25A1.75 1.75 0 0 1 0 8.25Zm1.75-.25a.25.25 0 0 0-.25.25v5.5c0 .138.112.25.25.25h1a.75.75 0 0 1 .75.75v2.189L6.22 8.72a.747.747 0 0 1 .53-.22h3.5a.25.25 0 0 0 .25-.25v-5.5a.25.25 0 0 0-.25-.25Zm12.5 2h-.5a.75.75 0 0 1 0-1.5h.5c.967 0 1.75.783 1.75 1.75v5.5A1.75 1.75 0 0 1 14.25 12H14v1.543a1.457 1.457 0 0 1-2.487 1.03L9.22 12.28a.749.749 0 1 1 1.06-1.06l2.22 2.219V11.25a.75.75 0 0 1 .75-.75h1a.25.25 0 0 0 .25-.25v-5.5a.25.25 0 0 0-.25-.25Zm-5.47.28-3 3a.747.747 0 0 1-1.06 0l-1.5-1.5a.749.749 0 1 1 1.06-1.06l.97.969L7.72 3.72a.749.749 0 1 1 1.06 1.06Z"
 
+STYLE=f"""
+<style>
+    :root {{
+         --border-color: #d1d9e0;
+         --icon-open: #1a7f37;
+         --icon-closed: #8250df;
+         --icon-default: #59636e;
+         --title-color: #0969da;
+         --text-color: #59636e;
+         --button-text-color: #25292e;
+         --button-background-color: #f6f8fa;
+     }}
+
+    text {{
+        font-family: Arial, sans-serif;
+        font-size: 12px;
+        fill: var(--text-color);
+    }}
+
+    text.title {{
+        fill: var(--title-color);
+        font-size: 14px;
+        font-weight: bold;
+    }}
+
+    text.button {{
+        font-size: 14px;
+        fill: var(--button-text-color);
+    }}
+
+    rect.button {{
+        fill: var(--button-background-color);
+        stroke: var(--border-color);
+        stroke-width: 2px;
+        rx: 6px;
+        ry: 6px;
+    }}
+
+    rect.card {{
+        fill: none;
+        stroke: var(--border-color);
+        stroke-width: 2px;
+        rx: 6px;
+        ry: 6px;
+    }}
+
+    .icon.open {{
+        fill: var(--icon-open);
+    }}
+
+    .icon.closed {{
+        fill: var(--icon-closed);
+    }}
+
+    .icon.default {{
+        fill: var(--icon-default);
+    }}
+
+    .title {{
+        fill: var(--title-color);
+    }}
+
+    .description {{
+        fill: var(--text-color);
+    }}
+
+    @media (prefers-color-scheme: dark) {{
+        :root {{
+            --border-color: #3d444d;
+            --icon-open: #57ab5a;
+            --icon-closed: #986ee2;
+            --icon-default: #9198a1;
+            --title-color: #478be6;
+            --text-color: #9198a1;
+            --button-text-color: #d1d7e0;
+            --button-background-color: #2a313c;
+        }}
+    }}
+</style>
+"""
+
 def build_char_width_table(default=6):
     """Build an estimated width table for ASCII chars."""
     table = {}
@@ -178,67 +259,7 @@ def generate_project_svg(project):
     # Create SVG content
     svg = f"""
     <svg width="{width}" height="{height}" xmlns="http://www.w3.org/2000/svg">
-        <style>
-            :root {{
-                 --border-color: #D1D9E0;
-                 --icon-open: #1a7f37;
-                 --icon-closed: #8250df;
-                 --icon-default: #59636e;
-                 --title-color: #0969da;
-                 --text-color: #59636e;
-             }}
-
-            text {{
-                font-family: Arial, sans-serif;
-                font-size: 12px;
-                fill: var(--text-color);
-            }}
-
-            text.title {{
-                fill: var(--title-color);
-                font-size: 14px;
-                font-weight: bold;
-            }}
-
-             rect.card {{
-                 fill: none;
-                 stroke: var(--border-color);
-                 stroke-width: 2px;
-                 rx: 6px;
-                 ry: 6px;
-             }}
-
-             .icon.open {{
-                 fill: var(--icon-open);
-             }}
-
-             .icon.closed {{
-                 fill: var(--icon-closed);
-             }}
-
-             .icon.default {{
-                 fill: var(--icon-default);
-             }}
-
-             .title {{
-                 fill: var(--title-color);
-             }}
-
-             .description {{
-                 fill: var(--text-color);
-             }}
-
-             @media (prefers-color-scheme: dark) {{
-                 :root {{
-                     --border-color: #3D444D;
-                     --icon-open: #57ab5a;
-                     --icon-closed: #986ee2;
-                     --icon-default: #9198a1;
-                     --title-color: #478be6;
-                     --text-color: #9198a1;
-                 }}
-             }}
-        </style>
+        {STYLE}
 
         <!-- Rounded Image -->
         <defs>
@@ -307,7 +328,7 @@ def get_project_status(repo):
     }
 
 
-def generate_svgs():
+def generate_project_svgs():
     projects = [
         {"name": "Atta", "description": "A robot simulator built from scratch, supporting multi-sensor simulation (IR, camera, touch), physics (Box2D, Bullet), OpenGL/Vulkan rendering, cross-platform compatibility (Windows, macOS, Linux, Web), and extensible C++ scripting.", "status": get_project_status("atta"), "image": "https://brenocq.s3.us-east-1.amazonaws.com/readme-atta.png"},
         {"name": "ImPlot3D", "description": "ImPlot3D extends Dear ImGui by offering accessible, high-performance 3D plotting capabilities. Drawing inspiration from ImPlot, it offers a user-friendly API for developers familiar with ImPlot. ImPlot3D is specifically crafted for generating 3D plots featuring customizable markers, lines, surfaces, images, and meshes.", "status": get_project_status("implot3d"), "image": "https://brenocq.s3.us-east-1.amazonaws.com/readme-implot3d.jpg"},
@@ -323,4 +344,31 @@ def generate_svgs():
         print(f'Uploaded {filename} to S3')
         s3.upload_file(filename, "brenocq", filename, ExtraArgs={"ContentType": "image/svg+xml"})
 
-generate_svgs()
+def generate_see_more_svg():
+    button_text = "See more"
+    font_size = 14
+    padding = 10
+    border_radius = 6
+
+    # Estimate text width based on average character width (Arial, bold, 14px)
+    avg_char_width = 7  # rough estimate
+    text_width = len(button_text) * avg_char_width
+    button_width = text_width + 2 * padding
+    button_height = font_size + 2 * padding
+
+    # Button SVG group
+    svg = f"""
+    <svg width="{button_width}" height="{button_height}" xmlns="http://www.w3.org/2000/svg">
+        {STYLE}
+
+         <rect class="button" x="0" y="0" width="{button_width}" height="{button_height}"/>
+         <text class="button" x="{button_width / 2}" y="{button_height / 2 + font_size / 3}" text-anchor="middle">{button_text}</text>
+    </svg>
+    """
+    filename = "see-more.svg"
+    with open(filename, "w") as f:
+        f.write(svg)
+    print(f'Saved {filename}')
+
+#generate_project_svgs()
+generate_see_more_svg()
