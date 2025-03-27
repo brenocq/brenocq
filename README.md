@@ -10,7 +10,7 @@
     <a href="https://github.com/brenocq/MyMachine"><img src="https://github.com/brenocq/brenocq/blob/generated-repo-images/readme-cpu-simulator.svg"/></a>
   </div>
   <div>
-    <a href="https://brenocq.com/projects"><img src="https://github.com/user-attachments/assets/c30d32a9-4d51-4f03-843b-f553b4023898" alt="See more"/></a>
+    <a href="https://brenocq.com/projects"><img src="https://github.com/user-attachments/assets/f2940917-1a80-4bac-82e6-f4c3354fba50" alt="See more"/></a>
   </div>
 </div>
 
