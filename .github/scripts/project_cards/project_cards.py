@@ -337,13 +337,13 @@ def generate_project_svgs():
         svg = generate_project_svg(project)
         with open(filename, "w") as f:
             f.write(svg)
-        print(f'Uploaded {filename} to S3')
 
 def generate_see_more_svg():
     button_text = "See more"
     font_size = 14
     padding = 10
     border_radius = 6
+    margin = 8
 
     # Estimate text width based on average character width (Arial, bold, 14px)
     avg_char_width = 7  # rough estimate
@@ -351,13 +351,33 @@ def generate_see_more_svg():
     button_width = text_width + 2 * padding
     button_height = font_size + 2 * padding
 
+    outer_width = button_width + 2 * margin
+    outer_height = button_height + 2 * margin
+
+    # Shake animation as translateX
+    animation = f"""
+    <animateTransform attributeName="transform"
+                      attributeType="XML"
+                      type="translate"
+                      values="-1 0; 2 0; -2 0; 2 0; -1 0; 0 0"
+                      dur="0.4s"
+                      begin="0s;shake.end+4.6s"
+                      repeatCount="1"
+                      id="shake"/>
+    """
+
     # Button SVG group
     svg = f"""
-    <svg width="{button_width}" height="{button_height}" xmlns="http://www.w3.org/2000/svg">
+    <svg width="{outer_width}" height="{outer_height}" xmlns="http://www.w3.org/2000/svg">
         {STYLE}
 
-         <rect class="button" x="0" y="0" width="{button_width}" height="{button_height}"/>
-         <text class="button" x="{button_width / 2}" y="{button_height / 2 + font_size / 3}" text-anchor="middle">{button_text}</text>
+        <g transform="translate({margin}, {margin})">
+            <g>
+                {animation}
+                <rect class="button" x="0" y="0" width="{button_width}" height="{button_height}"/>
+                <text class="button" x="{button_width / 2}" y="{button_height / 2 + font_size / 3}" text-anchor="middle">{button_text}</text>
+            </g>
+        </g>
     </svg>
     """
     filename = "see-more.svg"
