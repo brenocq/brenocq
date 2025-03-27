@@ -26,7 +26,7 @@ def build_char_width_table(default=6):
         ("fjrt", 4),
         ("abcdeghknopqsuvxyz", 6),
         ("mw", 8),
-        ("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 7),
+        ("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 8),
         ("0123456789", 6),
         ("-_=+[](){} ", 5),
         ("!\"#$%&'*<>?,;:/\\|`~", 4),
@@ -86,9 +86,9 @@ def encode_image_base64(image_url):
     return data_uri, img_width, img_height
 
 def generate_project_svg(project):
-    width = 300
+    width = 350
     height = 300
-    padding = 10
+    padding = 15
 
     # Mapping status keys to icon paths and CSS classes
     ICON_MAP = [
@@ -104,7 +104,7 @@ def generate_project_svg(project):
     # Image block
     image = ""
     image_x = 0
-    image_y = 30
+    image_y = padding + 25
     target_width = 0
     target_height = 0
     if "image" in project and project["image"]:
@@ -132,8 +132,8 @@ def generate_project_svg(project):
 
     # Wrapped description block
     description_text = project.get("description", "No description provided.")
-    description_lines = wrap_text(description_text, max_width=width-2*padding)
-    description_y = 180
+    description_lines = wrap_text(description_text, max_width = width - 2*padding)
+    description_y = image_y + target_height + padding + 5
 
     description = f'<text class="description" x="{padding}" y="{description_y}">\n'
     for i, line in enumerate(description_lines):
@@ -297,7 +297,7 @@ def generate_svgs():
         {"name": "CPU Simulator", "description": "I designed a custom assembly language along with an assembler to convert the assembly code into binary. Additionally, I developed a CPU simulator capable of executing the binary instructions, with the output displayed on a curses-based screen. To demonstrate the system, I created two games specifically for this CPU.", "status": get_project_status("MyMachine"), "image": "https://brenocq.s3.us-east-1.amazonaws.com/readme-cpu-simulator.png"},
     ]
     for project in projects:
-        filename = f"{project['name'].replace(' ', '_').lower()}.svg"
+        filename = f"readme-{project['name'].replace(' ', '-').lower()}.svg"
         print(f'Generating {filename} from project {projects}')
         svg = generate_project_svg(project)
         with open(filename, "w") as f:
