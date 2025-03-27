@@ -102,11 +102,12 @@ def generate_project_svg(project):
     ]
 
     # Image block
-    image = ""
     image_x = 0
     image_y = padding + 25
     target_width = 0
     target_height = 0
+    fade_image_delay = 0.1
+    image = ""
     if "image" in project and project["image"]:
         try:
             encoded_image, img_width, img_height = encode_image_base64(project["image"])
@@ -114,48 +115,61 @@ def generate_project_svg(project):
             target_height = 130
             aspect_ratio = img_width / img_height
             target_width = int(target_height * aspect_ratio)
-
-            # Center horizontally in SVG
             image_x = (width - target_width) // 2
 
             image = f"""
-            <image
-              href="{encoded_image}"
-              x="{image_x}"
-              y="{image_y}"
-              height="{target_height}"
-              width="{target_width}"
-              clip-path="url(#rounded-image)" />
+            <g opacity="0">
+                <animate attributeName="opacity" from="0" to="1" begin="{fade_image_delay}s" dur="0.4s" fill="freeze"/>
+                <image
+                  href="{encoded_image}"
+                  x="{image_x}"
+                  y="{image_y}"
+                  height="{target_height}"
+                  width="{target_width}"
+                  clip-path="url(#rounded-image)" />
+            </g>
             """
         except Exception as e:
             print(f"Warning: could not load image: {e}")
 
     # Wrapped description block
     description_text = project.get("description", "No description provided.")
-    description_lines = wrap_text(description_text, max_width = width - 2*padding)
+    fade_description_delay = fade_image_delay + 0.2  # small gap after image
     description_y = image_y + target_height + padding + 5
+    description_lines = wrap_text(description_text, max_width=width - 2 * padding)
 
-    description = f'<text class="description" x="{padding}" y="{description_y}">\n'
+    description_inner = ""
     for i, line in enumerate(description_lines):
         dy = "0" if i == 0 else "1.2em"
-        description += f'  <tspan x="{padding}" dy="{dy}">{line}</tspan>\n'
-    description += '</text>\n'
+        description_inner += f'  <tspan x="{padding}" dy="{dy}">{line}</tspan>\n'
 
-    # Footer block
+    description = f"""
+    <g opacity="0">
+        <animate attributeName="opacity" from="0" to="1" begin="{fade_description_delay}s" dur="0.4s" fill="freeze"/>
+        <text class="description" x="{padding}" y="{description_y}">
+            {description_inner.strip()}
+        </text>
+    </g>
+    """
+
     footer = ""
     footer_x = padding
+    animation_index = 0
     for key, path, icon_class in ICON_MAP:
         count = project.get("status", {}).get(key, 0)
         if count > 0:
+            delay = round(animation_index * 0.2, 2)
             footer += f"""
-            <g transform="translate({footer_x}, {height - padding})">
+            <g transform="translate({footer_x}, {height - padding})" opacity="0">
+                <animate attributeName="opacity" from="0" to="1" begin="{delay}s" dur="0.3s" fill="freeze"/>
                 <path class="icon {icon_class}" transform="translate(0, -13)" d="{path}"/>
                 <text x="19" y="0" text-anchor="start">{count}</text>
             </g>
             """
-            digit_width = 7  # Rough estimate per digit in Arial 12px
+            digit_width = 7  # Rough estimate per digit
             text_width = digit_width * len(str(count))
-            footer_x += 19 + text_width + 10  # Icon offset + text + spacing
+            footer_x += 19 + text_width + 10
+            animation_index += 1
 
     # Create SVG content
     svg = f"""
