@@ -1,7 +1,5 @@
 <a href="https://github.com/brenocq/brenocq/blob/main/.github/scripts/animated_text/animated_text.py"><img src="https://github.com/user-attachments/assets/42ba3aa5-838b-4571-a93c-000cfa2695f9"/></a>
 
-readme-object-transportation-swarm.svg
-
 <div align="center">
   <div>
     <a href="https://github.com/brenocq/implot3d"><img src="https://github.com/brenocq/brenocq/blob/generated-repo-images/readme-implot3d.svg"/></a>
@@ -27,5 +25,3 @@ readme-object-transportation-swarm.svg
     <a href="https://scholar.google.com/citations?user=nA1H9ooAAAAJ&hl=en"><img src="https://github.com/user-attachments/assets/a77c3b8a-97df-4644-be82-b975f8332b98"/></a>
   </div>
 </div>
-
-</div
