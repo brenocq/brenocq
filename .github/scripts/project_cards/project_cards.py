@@ -51,7 +51,7 @@ STYLE=f"""
     rect.button {{
         fill: var(--button-background-color);
         stroke: var(--border-color);
-        stroke-width: 2px;
+        stroke-width: 1px;
         rx: 6px;
         ry: 6px;
     }}
@@ -59,7 +59,7 @@ STYLE=f"""
     rect.card {{
         fill: none;
         stroke: var(--border-color);
-        stroke-width: 2px;
+        stroke-width: 1px;
         rx: 6px;
         ry: 6px;
     }}
