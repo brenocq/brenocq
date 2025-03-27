@@ -370,5 +370,5 @@ def generate_see_more_svg():
         f.write(svg)
     print(f'Saved {filename}')
 
-#generate_project_svgs()
+generate_project_svgs()
 generate_see_more_svg()
