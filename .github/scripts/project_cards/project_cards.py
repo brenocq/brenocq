@@ -22,13 +22,13 @@ def build_char_width_table(default=6):
     """Build an estimated width table for ASCII chars."""
     table = {}
     for chars, width in [
-        ("iIl. ", 3),
+        ("iIl.", 3),
         ("fjrt", 4),
         ("abcdeghknopqsuvxyz", 6),
         ("mw", 8),
         ("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 7),
         ("0123456789", 6),
-        ("-_=+[](){}", 5),
+        ("-_=+[](){} ", 5),
         ("!\"#$%&'*<>?,;:/\\|`~", 4),
     ]:
         for c in chars:
@@ -104,6 +104,7 @@ def generate_project_svg(project):
     # Image block
     image = ""
     image_x = 0
+    image_y = 30
     target_width = 0
     target_height = 0
     if "image" in project and project["image"]:
@@ -121,7 +122,7 @@ def generate_project_svg(project):
             <image
               href="{encoded_image}"
               x="{image_x}"
-              y="35"
+              y="{image_y}"
               height="{target_height}"
               width="{target_width}"
               clip-path="url(#rounded-image)" />
@@ -147,7 +148,7 @@ def generate_project_svg(project):
         count = project.get("status", {}).get(key, 0)
         if count > 0:
             footer += f"""
-            <g transform="translate({footer_x}, {height - 15})">
+            <g transform="translate({footer_x}, {height - padding})">
                 <path class="icon {icon_class}" transform="translate(0, -13)" d="{path}"/>
                 <text x="19" y="0" text-anchor="start">{count}</text>
             </g>
@@ -224,7 +225,7 @@ def generate_project_svg(project):
         <!-- Rounded Image -->
         <defs>
           <clipPath id="rounded-image">
-            <rect x="{image_x}" y="35" width="{target_width}" height="{target_height}" rx="6" ry="6"/>
+            <rect x="{image_x}" y="{image_y}" width="{target_width}" height="{target_height}" rx="6" ry="6"/>
           </clipPath>
         </defs>
 
@@ -232,7 +233,7 @@ def generate_project_svg(project):
         <rect class="card" x="0" y="0" width="{width}" height="{height}"/>
 
         <!-- Icon + Project Name -->
-        <g transform="translate(15, 15)">
+        <g transform="translate({padding}, {padding})">
             <path class="icon default" d="{REPO_PATH}"/>
             <text class="title" x="20" y="12">{project["name"]}</text>
         </g>
@@ -290,10 +291,10 @@ def get_project_status(repo):
 
 def generate_svgs():
     projects = [
-        {"name": "Atta", "description": "TODO", "status": get_project_status("atta")},
-        {"name": "ImPlot3D", "description": "ImPlot3D extends Dear ImGui by offering accessible, high-performance 3D plotting capabilities. Drawing inspiration from ImPlot, it offers a user-friendly API for developers familiar with ImPlot.", "status": get_project_status("implot3d"), "image": "https://brenocq.s3.us-east-1.amazonaws.com/readme-implot3d.jpg"},
-        {"name": "Object Transportation Swarm", "description": "TODO", "status": get_project_status("object-transportation")},
-        {"name": "CPU Simulator", "description": "TODO", "status": get_project_status("MyMachine")},
+        {"name": "Atta", "description": "A robot simulator built from scratch, supporting multi-sensor simulation (IR, camera, touch), physics (Box2D, Bullet), OpenGL/Vulkan rendering, cross-platform compatibility (Windows, macOS, Linux, Web), and extensible C++ scripting.", "status": get_project_status("atta"), "image": "https://brenocq.s3.us-east-1.amazonaws.com/readme-atta.png"},
+        {"name": "ImPlot3D", "description": "ImPlot3D extends Dear ImGui by offering accessible, high-performance 3D plotting capabilities. Drawing inspiration from ImPlot, it offers a user-friendly API for developers familiar with ImPlot. ImPlot3D is specifically crafted for generating 3D plots featuring customizable markers, lines, surfaces, images, and meshes.", "status": get_project_status("implot3d"), "image": "https://brenocq.s3.us-east-1.amazonaws.com/readme-implot3d.jpg"},
+        {"name": "Object Transportation Swarm", "description": "This project extends Chen (2015) by enabling a swarm of miniature vision-based robots to transport objects around obstacles using sub-goal formation. The approach remains decentralized, communication-free, and vision-driven, allowing efficient object transport in complex environments.", "status": get_project_status("object-transportation"), "image": "https://brenocq.s3.us-east-1.amazonaws.com/readme-object-transportation.png"},
+        {"name": "CPU Simulator", "description": "I designed a custom assembly language along with an assembler to convert the assembly code into binary. Additionally, I developed a CPU simulator capable of executing the binary instructions, with the output displayed on a curses-based screen. To demonstrate the system, I created two games specifically for this CPU.", "status": get_project_status("MyMachine"), "image": "https://brenocq.s3.us-east-1.amazonaws.com/readme-cpu-simulator.png"},
     ]
     for project in projects:
         filename = f"{project['name'].replace(' ', '_').lower()}.svg"
