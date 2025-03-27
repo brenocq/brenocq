@@ -16,6 +16,19 @@ def generate_svg(icon_name: str) -> str:
     svg_size = rect_size + 2 * margin
     scale_factor = icon_size / 24  # original icon is 24x24
 
+    # Conditional animation for website
+    rotation = ""
+    if icon_name == "website":
+        rotation = """
+            <animateTransform attributeName="transform"
+                              attributeType="XML"
+                              type="rotate"
+                              from="0 12 12"
+                              to="360 12 12"
+                              dur="4s"
+                              repeatCount="indefinite"/>
+        """
+
     return f"""
     <svg viewBox="0 0 {svg_size} {svg_size}" xmlns="http://www.w3.org/2000/svg" width="{svg_size}" height="{svg_size}">
         <style>
@@ -39,7 +52,7 @@ def generate_svg(icon_name: str) -> str:
             rect.button {{
                 fill: var(--button-background-color);
                 stroke: var(--button-border-color);
-                stroke-width: 2px;
+                stroke-width: 1px;
                 rx: 6px;
                 ry: 6px;
             }}
@@ -50,7 +63,9 @@ def generate_svg(icon_name: str) -> str:
 
         <!-- Scaled icon centered inside rect -->
         <g transform="translate({margin + padding}, {margin + padding}) scale({scale_factor})">
-            <path class="icon" d="{ICONS[icon_name]}"/>
+            <path class="icon" d="{ICONS[icon_name]}">
+                {rotation}
+            </path>
         </g>
     </svg>
     """
