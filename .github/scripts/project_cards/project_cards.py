@@ -3,6 +3,10 @@ import requests
 import base64
 from io import BytesIO
 from PIL import Image
+import boto3
+
+# AWS
+s3 = boto3.client("s3")
 
 # GitHub token
 GITHUB_TOKEN = os.environ['GITHUB_TOKEN']
@@ -316,5 +320,7 @@ def generate_svgs():
         svg = generate_project_svg(project)
         with open(filename, "w") as f:
             f.write(svg)
+        print(f'Uploaded {filename} to S3')
+        s3.upload_file(filename, "brenocq", filename, ExtraArgs={"ContentType": "image/svg+xml"})
 
 generate_svgs()
