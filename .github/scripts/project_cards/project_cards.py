@@ -1,5 +1,8 @@
 import os
 import requests
+import base64
+from io import BytesIO
+from PIL import Image
 
 # GitHub token
 GITHUB_TOKEN = os.environ['GITHUB_TOKEN']
@@ -63,6 +66,25 @@ def wrap_text(text, max_width):
 
     return lines
 
+def encode_image_base64(image_url):
+    response = requests.get(image_url)
+    if response.status_code != 200:
+        raise Exception(f"Failed to download image from {image_url}")
+
+    content_type = response.headers.get("Content-Type")
+    if content_type is None or not content_type.startswith("image/"):
+        raise Exception(f"Invalid Content-Type: {content_type}")
+
+    # Get image dimensions
+    img = Image.open(BytesIO(response.content))
+    img_width, img_height = img.size
+
+    # Base64 encode
+    encoded = base64.b64encode(response.content).decode("utf-8")
+    data_uri = f"data:{content_type};base64,{encoded}"
+
+    return data_uri, img_width, img_height
+
 def generate_project_svg(project):
     width = 300
     height = 300
@@ -79,10 +101,38 @@ def generate_project_svg(project):
         ("closed_discussions", DISCUSSION_CLOSED_PATH, "closed"),
     ]
 
-    # Prepare wrapped description block
+    # Image block
+    image = ""
+    image_x = 0
+    target_width = 0
+    target_height = 0
+    if "image" in project and project["image"]:
+        try:
+            encoded_image, img_width, img_height = encode_image_base64(project["image"])
+
+            target_height = 130
+            aspect_ratio = img_width / img_height
+            target_width = int(target_height * aspect_ratio)
+
+            # Center horizontally in SVG
+            image_x = (width - target_width) // 2
+
+            image = f"""
+            <image
+              href="{encoded_image}"
+              x="{image_x}"
+              y="35"
+              height="{target_height}"
+              width="{target_width}"
+              clip-path="url(#rounded-image)" />
+            """
+        except Exception as e:
+            print(f"Warning: could not load image: {e}")
+
+    # Wrapped description block
     description_text = project.get("description", "No description provided.")
     description_lines = wrap_text(description_text, max_width=width-2*padding)
-    description_y = 150
+    description_y = 180
 
     description = f'<text class="description" x="{padding}" y="{description_y}">\n'
     for i, line in enumerate(description_lines):
@@ -90,7 +140,7 @@ def generate_project_svg(project):
         description += f'  <tspan x="{padding}" dy="{dy}">{line}</tspan>\n'
     description += '</text>\n'
 
-    # Build footer
+    # Footer block
     footer = ""
     footer_x = padding
     for key, path, icon_class in ICON_MAP:
@@ -171,6 +221,13 @@ def generate_project_svg(project):
              }}
         </style>
 
+        <!-- Rounded Image -->
+        <defs>
+          <clipPath id="rounded-image">
+            <rect x="{image_x}" y="35" width="{target_width}" height="{target_height}" rx="6" ry="6"/>
+          </clipPath>
+        </defs>
+
         <!-- Card Border -->
         <rect class="card" x="0" y="0" width="{width}" height="{height}"/>
 
@@ -179,6 +236,9 @@ def generate_project_svg(project):
             <path class="icon default" d="{REPO_PATH}"/>
             <text class="title" x="20" y="12">{project["name"]}</text>
         </g>
+
+        <!-- Image -->
+        {image}
 
         <!-- Description -->
         {description}
@@ -226,21 +286,12 @@ def get_project_status(repo):
         "open_discussions": data["open_dis"]["totalCount"],
         "closed_discussions": data["closed_dis"]["totalCount"]
     }
-    #return {
-    #    "stars": 867,
-    #    "open_issues": 0,
-    #    "closed_issues": 2,
-    #    "open_prs": 1,
-    #    "closed_prs": 30,
-    #    "open_discussions": 33,
-    #    "closed_discussions": 2,
-    #}
 
 
 def generate_svgs():
     projects = [
         {"name": "Atta", "description": "TODO", "status": get_project_status("atta")},
-        {"name": "ImPlot3D", "description": "ImPlot3D extends Dear ImGui by offering accessible, high-performance 3D plotting capabilities. Drawing inspiration from ImPlot, it offers a user-friendly API for developers familiar with ImPlot.", "status": get_project_status("implot3d")},
+        {"name": "ImPlot3D", "description": "ImPlot3D extends Dear ImGui by offering accessible, high-performance 3D plotting capabilities. Drawing inspiration from ImPlot, it offers a user-friendly API for developers familiar with ImPlot.", "status": get_project_status("implot3d"), "image": "https://brenocq.s3.us-east-1.amazonaws.com/readme-implot3d.jpg"},
         {"name": "Object Transportation Swarm", "description": "TODO", "status": get_project_status("object-transportation")},
         {"name": "CPU Simulator", "description": "TODO", "status": get_project_status("MyMachine")},
     ]
