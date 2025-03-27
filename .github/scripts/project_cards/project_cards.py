@@ -15,10 +15,58 @@ PR_CLOSED_PATH = "M5.45 5.154A4.25 4.25 0 0 0 9.25 7.5h1.378a2.251 2.251 0 1 1 0
 DISCUSSION_OPEN_PATH = "M1.75 1h8.5c.966 0 1.75.784 1.75 1.75v5.5A1.75 1.75 0 0 1 10.25 10H7.061l-2.574 2.573A1.458 1.458 0 0 1 2 11.543V10h-.25A1.75 1.75 0 0 1 0 8.25v-5.5C0 1.784.784 1 1.75 1ZM1.5 2.75v5.5c0 .138.112.25.25.25h1a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h3.5a.25.25 0 0 0 .25-.25v-5.5a.25.25 0 0 0-.25-.25h-8.5a.25.25 0 0 0-.25.25Zm13 2a.25.25 0 0 0-.25-.25h-.5a.75.75 0 0 1 0-1.5h.5c.966 0 1.75.784 1.75 1.75v5.5A1.75 1.75 0 0 1 14.25 12H14v1.543a1.458 1.458 0 0 1-2.487 1.03L9.22 12.28a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215l2.22 2.22v-2.19a.75.75 0 0 1 .75-.75h1a.25.25 0 0 0 .25-.25Z"
 DISCUSSION_CLOSED_PATH = "M0 2.75C0 1.783.784 1 1.75 1h8.5c.967 0 1.75.783 1.75 1.75v5.5A1.75 1.75 0 0 1 10.25 10H7.061l-2.574 2.573A1.457 1.457 0 0 1 2 11.543V10h-.25A1.75 1.75 0 0 1 0 8.25Zm1.75-.25a.25.25 0 0 0-.25.25v5.5c0 .138.112.25.25.25h1a.75.75 0 0 1 .75.75v2.189L6.22 8.72a.747.747 0 0 1 .53-.22h3.5a.25.25 0 0 0 .25-.25v-5.5a.25.25 0 0 0-.25-.25Zm12.5 2h-.5a.75.75 0 0 1 0-1.5h.5c.967 0 1.75.783 1.75 1.75v5.5A1.75 1.75 0 0 1 14.25 12H14v1.543a1.457 1.457 0 0 1-2.487 1.03L9.22 12.28a.749.749 0 1 1 1.06-1.06l2.22 2.219V11.25a.75.75 0 0 1 .75-.75h1a.25.25 0 0 0 .25-.25v-5.5a.25.25 0 0 0-.25-.25Zm-5.47.28-3 3a.747.747 0 0 1-1.06 0l-1.5-1.5a.749.749 0 1 1 1.06-1.06l.97.969L7.72 3.72a.749.749 0 1 1 1.06 1.06Z"
 
+def build_char_width_table(default=6):
+    """Build an estimated width table for ASCII chars."""
+    table = {}
+    for chars, width in [
+        ("iIl. ", 3),
+        ("fjrt", 4),
+        ("abcdeghknopqsuvxyz", 6),
+        ("mw", 8),
+        ("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 7),
+        ("0123456789", 6),
+        ("-_=+[](){}", 5),
+        ("!\"#$%&'*<>?,;:/\\|`~", 4),
+    ]:
+        for c in chars:
+            table[c] = width
+    return table
+
+CHAR_WIDTH_TABLE = build_char_width_table()
+
+def estimate_word_width(word):
+    return sum(CHAR_WIDTH_TABLE.get(c, 6) for c in word)
+
+def wrap_text(text, max_width):
+    """Wrap text based on estimated pixel width."""
+    words = text.split()
+    lines = []
+    current_line = ""
+    current_width = 0
+
+    for word in words:
+        word_width = estimate_word_width(word)
+        space_width = CHAR_WIDTH_TABLE.get(" ", 3)
+        if current_line:
+            word_width += space_width
+
+        if current_width + word_width <= max_width:
+            current_line += (" " if current_line else "") + word
+            current_width += word_width
+        else:
+            lines.append(current_line)
+            current_line = word
+            current_width = estimate_word_width(word)
+
+    if current_line:
+        lines.append(current_line)
+
+    return lines
+
 def generate_project_svg(project):
     width = 300
     height = 300
-    font_size = 20
+    padding = 10
 
     # Mapping status keys to icon paths and CSS classes
     ICON_MAP = [
@@ -31,9 +79,20 @@ def generate_project_svg(project):
         ("closed_discussions", DISCUSSION_CLOSED_PATH, "closed"),
     ]
 
+    # Prepare wrapped description block
+    description_text = project.get("description", "No description provided.")
+    description_lines = wrap_text(description_text, max_width=width-2*padding)
+    description_y = 150
+
+    description = f'<text class="description" x="{padding}" y="{description_y}">\n'
+    for i, line in enumerate(description_lines):
+        dy = "0" if i == 0 else "1.2em"
+        description += f'  <tspan x="{padding}" dy="{dy}">{line}</tspan>\n'
+    description += '</text>\n'
+
     # Build footer
     footer = ""
-    footer_x = 10
+    footer_x = padding
     for key, path, icon_class in ICON_MAP:
         count = project.get("status", {}).get(key, 0)
         if count > 0:
@@ -121,6 +180,9 @@ def generate_project_svg(project):
             <text class="title" x="20" y="12">{project["name"]}</text>
         </g>
 
+        <!-- Description -->
+        {description}
+
         <!-- Footer -->
         {footer}
     </svg>
@@ -178,7 +240,7 @@ def get_project_status(repo):
 def generate_svgs():
     projects = [
         {"name": "Atta", "description": "TODO", "status": get_project_status("atta")},
-        {"name": "ImPlot3D", "description": "TODO", "status": get_project_status("implot3d")},
+        {"name": "ImPlot3D", "description": "ImPlot3D extends Dear ImGui by offering accessible, high-performance 3D plotting capabilities. Drawing inspiration from ImPlot, it offers a user-friendly API for developers familiar with ImPlot.", "status": get_project_status("implot3d")},
         {"name": "Object Transportation Swarm", "description": "TODO", "status": get_project_status("object-transportation")},
         {"name": "CPU Simulator", "description": "TODO", "status": get_project_status("MyMachine")},
     ]
