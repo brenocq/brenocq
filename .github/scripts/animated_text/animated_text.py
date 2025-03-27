@@ -2,8 +2,8 @@ TEXT = "Hi there! I'm Bruno|<<<endon|<<<no|<<o"
 FILENAME = "brenocq_typing.svg"
 
 def build_svg_animation(text: str) -> str:
-    width = 250
-    height = 50
+    width = 210
+    height = 30
     font_size = 20
 
     # Build <text> blocks for each step of the typing
