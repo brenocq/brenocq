@@ -23,7 +23,7 @@ Pouring coffee at least twice a day <img height="40" src="https://github.com/use
 </div>
 
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/56c682b0-9a16-489f-9056-6a7ec22ddc73"/>
+  <img src="https://github.com/user-attachments/assets/347c4c70-760d-4f56-baf0-e8782580122d"/>
 </div>
 
 <div align="center">
