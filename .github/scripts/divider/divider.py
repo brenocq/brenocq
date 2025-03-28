@@ -33,19 +33,20 @@ def generate_svg() -> str:
     try:
         encoded_image, img_width, img_height = encode_image_base64("https://brenocq.s3.us-east-1.amazonaws.com/readme-mike.png")
 
-        target_height = 30
+        target_height = 50
         aspect_ratio = img_width / img_height
         target_width = int(target_height * aspect_ratio)
 
         mikinho = f"""
         <image
           href="{encoded_image}"
-          x="{mike_x}"
+          x="{0}"
           y="{50}"
           height="{target_height}"
           width="{target_width}">
+            <!-- Vertical spooky Mike -->
             <animate attributeName="y"
-              values="50;20;20;50;50"
+              values="50;0;0;50;50"
               keyTimes="0;0.01;0.26;0.86;1"
               begin="2s"
               dur="9s"
@@ -53,6 +54,16 @@ def generate_svg() -> str:
               fill="freeze"
               calcMode="spline"
               keySplines="0.4 0 0.2 1; 0 0 1 1; 0.4 0 0.2 1; 0 0 1 1"/>
+
+            <!-- Horizontal movement cycle (one per bounce) -->
+            <animate attributeName="x"
+              values="30;{width - target_width - 30};{width // 2 - target_width // 2};30"
+              keyTimes="0;0.33;0.66;1"
+              begin="0s"
+              dur="27s"
+              repeatCount="indefinite"
+              fill="freeze"
+              calcMode="discrete" />
         </image>
         """
     except Exception as e:
@@ -77,7 +88,7 @@ def generate_svg() -> str:
         </style>
 
         <!-- Divider -->
-        <rect class="divider" x="0" y="{height-2}" width="{width}" height="2" />
+        <rect class="divider" x="0" y="{height-1}" width="{width}" height="1" />
 
         <!-- Mikinho -->
         {mikinho}
