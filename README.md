@@ -1,4 +1,4 @@
-<a href="https://github.com/brenocq/brenocq/blob/main/.github/scripts/animated_text/animated_text.py"><img src="https://github.com/user-attachments/assets/42ba3aa5-838b-4571-a93c-000cfa2695f9"/></a>
+<a href="https://github.com/brenocq/brenocq/blob/main/.github/scripts/animated_text/animated_text.py"><img height="50" src="https://github.com/user-attachments/assets/42ba3aa5-838b-4571-a93c-000cfa2695f9"/></a>
 
 ## About me
 Proud dad of Mike <img height="40" src="https://github.com/user-attachments/assets/5a8f20d7-440c-4de1-a4d3-f55ee4062ca3"/>
