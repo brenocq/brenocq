@@ -2,10 +2,8 @@
 
 ## About me
 - Proud dad of Mike <img height="20" src="https://github.com/user-attachments/assets/5a8f20d7-440c-4de1-a4d3-f55ee4062ca3"/>
-
-- Cultivating my little carnivorous jungle <img height="20" src="https://github.com/user-attachments/assets/0e669fa0-5712-4ba9-983e-2d77a4ffeca6"/> <img height="20" src="https://github.com/user-attachments/assets/4c934baf-eb66-48d4-9581-28f95ad9eeb4"/> <img height="20" src="https://github.com/user-attachments/assets/5e890f75-40da-4728-80d9-abfd48642583"/> <img height="20" src="https://github.com/user-attachments/assets/28c35912-47a3-4de3-b987-5b6cb516c82a"/>
-
-- Pouring coffee at least twice a day <img height="20" src="https://github.com/user-attachments/assets/425bbef1-7322-4d35-ac59-214e7e2bb2c8"/>
+- Growing my little carnivorous jungle <img height="20" src="https://github.com/user-attachments/assets/0e669fa0-5712-4ba9-983e-2d77a4ffeca6"/> <img height="20" src="https://github.com/user-attachments/assets/4c934baf-eb66-48d4-9581-28f95ad9eeb4"/> <img height="20" src="https://github.com/user-attachments/assets/5e890f75-40da-4728-80d9-abfd48642583"/> <img height="20" src="https://github.com/user-attachments/assets/28c35912-47a3-4de3-b987-5b6cb516c82a"/>
+- Brewing coffee at least twice a day <img height="20" src="https://github.com/user-attachments/assets/425bbef1-7322-4d35-ac59-214e7e2bb2c8"/>
 
 ## Some projects
 <div align="center">
