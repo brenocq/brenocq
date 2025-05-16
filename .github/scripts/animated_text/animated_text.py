@@ -1,4 +1,4 @@
-TEXT = "Hi there! I'm Bruno|<<<endon|<<<o"
+TEXT = "Hi there! I'm Bruno|<<<endon|<<<no|<<o"
 FILENAME = "brenocq_typing.svg"
 
 def build_svg_animation(text: str) -> str:
