@@ -16,7 +16,10 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Install dependencies
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install -y libjpeg-dev zlib1g-dev
+
+      - name: Install Python dependencies
         run: pip install -r .github/scripts/project_cards/requirements.txt
 
       - name: Run script
