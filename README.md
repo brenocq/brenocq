@@ -8,12 +8,20 @@
 ## Some projects
 <div align="center">
   <div>
+    <a href="https://github.com/epezent/implot"><img src="https://github.com/brenocq/brenocq/blob/generated-repo-images/readme-epezent-implot.svg"/></a>
     <a href="https://github.com/brenocq/implot3d"><img src="https://github.com/brenocq/brenocq/blob/generated-repo-images/readme-implot3d.svg"/></a>
-    <a href="https://github.com/brenocq/atta"><img src="https://github.com/brenocq/brenocq/blob/generated-repo-images/readme-atta.svg"/></a>
   </div>
   <div>
+    <a href="https://github.com/brenocq/atta"><img src="https://github.com/brenocq/brenocq/blob/generated-repo-images/readme-atta.svg"/></a>
+    <a href="https://github.com/brenocq/ket"><img src="https://github.com/brenocq/brenocq/blob/generated-repo-images/readme-quantum-simulator.svg"/></a>
+  </div>
+  <div>
+    <a href="https://github.com/brenocq/bldc-motor"><img src="https://github.com/brenocq/brenocq/blob/generated-repo-images/readme-bldc-motor-controller.svg"/></a>
     <a href="https://github.com/brenocq/object-transportation"><img src="https://github.com/brenocq/brenocq/blob/generated-repo-images/readme-object-transportation-swarm.svg"/></a>
+  </div>
+  <div>
     <a href="https://github.com/brenocq/MyMachine"><img src="https://github.com/brenocq/brenocq/blob/generated-repo-images/readme-cpu-simulator.svg"/></a>
+    <a href="https://github.com/brenocq/honeybee-democracy"><img src="https://github.com/brenocq/brenocq/blob/generated-repo-images/readme-honeybee-democracy.svg"/></a>
   </div>
   <div>
     <a href="https://brenocq.com/projects"><img src="https://github.com/user-attachments/assets/f2940917-1a80-4bac-82e6-f4c3354fba50" alt="See more"/></a>
