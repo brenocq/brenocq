@@ -121,8 +121,8 @@ CHAR_WIDTH_TABLE = build_char_width_table()
 def estimate_word_width(word):
     return sum(CHAR_WIDTH_TABLE.get(c, 6) for c in word)
 
-def wrap_text(text, max_width):
-    """Wrap text based on estimated pixel width."""
+def wrap_text(text, max_width, max_lines=None):
+    """Wrap text based on estimated pixel width, optionally capping the number of lines."""
     words = text.split()
     lines = []
     current_line = ""
@@ -145,30 +145,43 @@ def wrap_text(text, max_width):
     if current_line:
         lines.append(current_line)
 
+    if max_lines is not None and len(lines) > max_lines:
+        lines = lines[:max_lines]
+        lines[-1] = lines[-1].rstrip() + "…"
+
     return lines
 
-def encode_image_base64(image_url):
-    response = requests.get(image_url)
-    if response.status_code != 200:
-        raise Exception(f"Failed to download image from {image_url}")
+def encode_image_base64(image_source):
+    # Support both remote URLs and local file paths (handy for previewing a
+    # card before the image is uploaded to S3).
+    if image_source.startswith("http://") or image_source.startswith("https://"):
+        response = requests.get(image_source)
+        if response.status_code != 200:
+            raise Exception(f"Failed to download image from {image_source}")
 
-    content_type = response.headers.get("Content-Type")
-    if content_type is None or not content_type.startswith("image/"):
-        raise Exception(f"Invalid Content-Type: {content_type}")
+        content_type = response.headers.get("Content-Type")
+        if content_type is None or not content_type.startswith("image/"):
+            raise Exception(f"Invalid Content-Type: {content_type}")
+        content = response.content
+    else:
+        with open(image_source, "rb") as f:
+            content = f.read()
+        ext = os.path.splitext(image_source)[1].lower().lstrip(".")
+        content_type = f"image/{'jpeg' if ext == 'jpg' else ext}"
 
     # Get image dimensions
-    img = Image.open(BytesIO(response.content))
+    img = Image.open(BytesIO(content))
     img_width, img_height = img.size
 
     # Base64 encode
-    encoded = base64.b64encode(response.content).decode("utf-8")
+    encoded = base64.b64encode(content).decode("utf-8")
     data_uri = f"data:{content_type};base64,{encoded}"
 
     return data_uri, img_width, img_height
 
 def generate_project_svg(project):
     width = 350
-    height = 300
+    height = 260
     padding = 15
 
     # Mapping status keys to icon paths and CSS classes
@@ -217,7 +230,7 @@ def generate_project_svg(project):
     description_text = project.get("description", "No description provided.")
     fade_description_delay = fade_image_delay + 0.2  # small gap after image
     description_y = image_y + target_height + padding + 5
-    description_lines = wrap_text(description_text, max_width=width - 2 * padding)
+    description_lines = wrap_text(description_text, max_width=width - 2 * padding, max_lines=3)
 
     description_inner = ""
     for i, line in enumerate(description_lines):
@@ -286,7 +299,7 @@ def generate_project_svg(project):
 
     return svg
 
-def get_project_status(repo):
+def get_project_status(repo, owner="brenocq"):
     url = "https://api.github.com/graphql"
     headers = {
         "Authorization": f"Bearer {GITHUB_TOKEN}",
@@ -295,7 +308,7 @@ def get_project_status(repo):
 
     query = f"""
     {{
-      repository(owner: "brenocq", name: "{repo}") {{
+      repository(owner: "{owner}", name: "{repo}") {{
         stargazerCount
         issues(states: OPEN) {{ totalCount }}
         closed_issues: issues(states: CLOSED) {{ totalCount }}
@@ -326,14 +339,17 @@ def get_project_status(repo):
 
 def generate_project_svgs():
     projects = [
-        {"name": "Atta", "description": "A robot simulator built from scratch, supporting multi-sensor simulation (IR, camera, touch), physics (Box2D, Bullet), OpenGL/Vulkan rendering, cross-platform compatibility (Windows, macOS, Linux, Web), and extensible C++ scripting.", "status": get_project_status("atta"), "image": "https://brenocq.s3.us-east-1.amazonaws.com/readme-atta.png"},
-        {"name": "ImPlot3D", "description": "ImPlot3D extends Dear ImGui by offering accessible, high-performance 3D plotting capabilities. Drawing inspiration from ImPlot, it offers a user-friendly API for developers familiar with ImPlot. ImPlot3D is specifically crafted for generating 3D plots featuring customizable markers, lines, surfaces, images, and meshes.", "status": get_project_status("implot3d"), "image": "https://brenocq.s3.us-east-1.amazonaws.com/readme-implot3d.jpg"},
-        {"name": "Object Transportation Swarm", "description": "This project extends Chen (2015) by enabling a swarm of miniature vision-based robots to transport objects around obstacles using sub-goal formation. The approach remains decentralized, communication-free, and vision-driven, allowing efficient object transport in complex environments.", "status": get_project_status("object-transportation"), "image": "https://brenocq.s3.us-east-1.amazonaws.com/readme-object-transportation.png"},
-        {"name": "CPU Simulator", "description": "I designed a custom assembly language along with an assembler to convert the assembly code into binary. Additionally, I developed a CPU simulator capable of executing the binary instructions, with the output displayed on a curses-based screen. To demonstrate the system, I created two games specifically for this CPU.", "status": get_project_status("MyMachine"), "image": "https://brenocq.s3.us-east-1.amazonaws.com/readme-cpu-simulator.png"},
+        {"name": "Atta", "description": "A from-scratch robot simulator with multi-sensor support, 2D/3D physics, OpenGL/Vulkan rendering, and C++ scripting, running on Windows, macOS, Linux, and Web.", "status": get_project_status("atta"), "image": "https://brenocq.s3.us-east-1.amazonaws.com/readme-atta.png"},
+        {"name": "ImPlot3D", "description": "A Dear ImGui extension for high-performance 3D plotting, with an ImPlot-style API for markers, lines, surfaces, images, and meshes.", "status": get_project_status("implot3d"), "image": "https://brenocq.s3.us-east-1.amazonaws.com/readme-implot3d.jpg"},
+        {"name": "epezent/ImPlot", "description": "An immediate-mode plotting library for Dear ImGui, with a rich set of real-time 2D plots — lines, scatter, bars, heatmaps, and more.", "status": get_project_status("implot", owner="epezent"), "image": "https://brenocq.s3.us-east-1.amazonaws.com/readme-implot.png"},
+        {"name": "Quantum Simulator", "description": "A quantum computing library for C++20 with Python bindings. Build a circuit, simulate it, and sample outcomes from code, the CLI, a GUI, or the browser.", "status": get_project_status("ket"), "image": "https://brenocq.s3.us-east-1.amazonaws.com/readme-ket.png"},
+        {"name": "Object Transportation Swarm", "description": "A decentralized, vision-driven swarm of miniature robots that transports objects around obstacles using sub-goal formation. Extends Chen (2015).", "status": get_project_status("object-transportation"), "image": "https://brenocq.s3.us-east-1.amazonaws.com/readme-object-transportation.png"},
+        {"name": "CPU Simulator", "description": "A custom assembly language, assembler, and CPU simulator that runs the compiled binaries on a curses-based screen, with two demo games.", "status": get_project_status("MyMachine"), "image": "https://brenocq.s3.us-east-1.amazonaws.com/readme-cpu-simulator.png"},
     ]
     for project in projects:
-        filename = f"readme-{project['name'].replace(' ', '-').lower()}.svg"
-        print(f'Generating {filename} from project {projects}')
+        slug = project['name'].lower().replace(' ', '-').replace('/', '-')
+        filename = f"readme-{slug}.svg"
+        print(f'Generating {filename} from project {project["name"]}')
         svg = generate_project_svg(project)
         with open(filename, "w") as f:
             f.write(svg)
